@@ -21,17 +21,48 @@ namespace PruebaBaseDatos
     {
         private BDMarcosEntities contexto;
         private CLIENTE nuevo;
+        private CollectionViewSource vista;
         public MainWindow()
         {
             InitializeComponent();
             contexto = new BDMarcosEntities();
 
             contexto.CLIENTES.Load();
+            contexto.PEDIDOS.Load();
+
+
             ClientesListBox.DataContext =  contexto.CLIENTES.Local;
             ClientesComboBox.DataContext = contexto.CLIENTES.Local;
             ClientesModificarComboBox.DataContext = contexto.CLIENTES.Local;
             nuevo = new CLIENTE();
             AñadirStackPanel.DataContext = nuevo;
+
+            DataGrid.DataContext = contexto.CLIENTES.Local;
+
+
+            vista = new CollectionViewSource();
+            vista.Source = contexto.CLIENTES.Local;
+            FiltrarDataGrid.DataContext = vista;
+            vista.Filter += Vista_Filter;
+
+            
+        }
+        
+        private void Vista_Filter(object sender, FilterEventArgs e)
+        {
+            CLIENTE item = (CLIENTE)e.Item;
+
+            if(FiltrarTextBox.Text == "")
+            {
+                e.Accepted = true;
+            }
+            else
+            {
+                if (item.nombre.Contains(FiltrarTextBox.Text))
+                    e.Accepted = true;
+                else
+                    e.Accepted = false;
+            }
         }
 
         private void InsertarButton_Click(object sender, RoutedEventArgs e)
@@ -51,6 +82,16 @@ namespace PruebaBaseDatos
         private void ModificarButton_Click(object sender, RoutedEventArgs e)
         {
             contexto.SaveChanges();
+        }
+
+        private void ActualizarButton_Click(object sender, RoutedEventArgs e)
+        {
+            contexto.SaveChanges();
+        }
+
+        private void FiltrarButton_Click(object sender, RoutedEventArgs e)
+        {
+            vista.View.Refresh();
         }
     }
 }
