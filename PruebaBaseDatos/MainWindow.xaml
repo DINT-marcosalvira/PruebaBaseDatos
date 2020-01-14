@@ -87,7 +87,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Width="*" Header="Nº de pedidos" Binding="{Binding CLIENTE.PEDIDO.COUNT}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="*" Header="Nº de pedidos" Binding="{Binding PEDIDOS.Count}" IsReadOnly="True" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </DockPanel>

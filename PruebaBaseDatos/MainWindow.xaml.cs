@@ -22,10 +22,16 @@ namespace PruebaBaseDatos
         private BDMarcosEntities contexto;
         private CLIENTE nuevo;
         private CollectionViewSource vista;
+        ObservableCollection<CLIENTE> Clientes;
         public MainWindow()
         {
             InitializeComponent();
             contexto = new BDMarcosEntities();
+
+            var consulta = from Cliente in contexto.CLIENTES.Include("PEDIDOS")
+                           select Cliente;
+
+            Clientes = new ObservableCollection<CLIENTE>(consulta.ToList());
 
             contexto.CLIENTES.Load();
             contexto.PEDIDOS.Load();
@@ -41,7 +47,7 @@ namespace PruebaBaseDatos
 
 
             vista = new CollectionViewSource();
-            vista.Source = contexto.CLIENTES.Local;
+            vista.Source = Clientes;
             FiltrarDataGrid.DataContext = vista;
             vista.Filter += Vista_Filter;
 
